@@ -61,6 +61,7 @@ class Tests {
         assertEquals(2.13, lengthInMeters(1, 0, 0), 1e-2)
     }
 
+
     @Test
     @Tag("Trivial")
     fun angleInRadian() {
