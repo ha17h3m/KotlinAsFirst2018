@@ -2,6 +2,7 @@
 package lesson1.task1
 
 import kotlin.math.*
+import java.lang.Math.pow
 
 /**
  * Пример
@@ -80,7 +81,7 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double =
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
 fun angleInRadian(grad: Int, min: Int, sec: Int): Double {
-    return (grad + min * 60 + sec * 3600) / (PI / 180)
+    return (grad + min / 60 + sec / 3600) * (PI / 180)
 }
 
 
@@ -132,16 +133,8 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Сколько денег будет на счету через 3 года (с учётом сложных процентов)?
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
-fun accountInThreeYears(initial: Int, percent: Int): Double {
-    val x1 = initial
-    val x2 = (initial * percent.toDouble())/100
-    var result = x1.toDouble()
-    for (i in 1..3) {
-        result+=result * x2
-    }
-    return result
+fun accountInThreeYears(initial: Int, percent: Int): Double = pow(1 + percent * 0.01, 3.0) * initial
 
-}
 
 
 
