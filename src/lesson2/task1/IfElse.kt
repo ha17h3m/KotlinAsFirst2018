@@ -138,9 +138,9 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
     val bishop = abs(kingX - bishopX) == abs(kingY - bishopY)
 return when {
         rook && bishop -> 3
-        rook -> 1
-        bishop -> 2
-        else -> 0
+        rook           -> 1
+        bishop         -> 2
+        else           -> 0
     }
 }
 
@@ -154,7 +154,7 @@ return when {
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
     if (a + b <= c || a + c <= b || b + c <= a) return -1
-    val hyp = max(max(a, b), c)
+    val hyp = maxOf(maxOf(a, b), c)
     var kat1 = 0.0
     var kat2 = 0.0
     if (hyp == a) {
