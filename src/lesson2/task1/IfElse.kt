@@ -153,34 +153,18 @@ return when {
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    if (a + b <= c || a + c <= b || b + c <= a) return -1
-    val hyp = maxOf(maxOf(a, b), c)
-    var kat1 = 0.0
-    var kat2 = 0.0
-    if (hyp == a) {
-        kat1 = b
-        kat2 = c
+    val x1 = sqrt(sqr(a) + sqr(b))
+    val x2 = sqrt(sqr(a) + sqr(c))
+    val x3 = sqrt(sqr(b) + sqr(c))
+    return if (c > a + b || b > a + c || a > b + c)
+        -1
+    else when {
+        a == x3 || b == x2 || c == x1 -> 1
+        a > x3 || b > x2 || c > x1 -> 2
+        else -> 0
     }
-
-    if (hyp == b) {
-        kat1 = a
-        kat2 = c
-    }
-
-    if (hyp == c) {
-        kat1 = b
-        kat2 = a
-    }
-    return when {
-
-        sqr(kat1) + sqr(kat2) > sqr(hyp) -> 0
-        sqr(kat1) + sqr(kat2) < sqr(hyp) -> 2
-        else -> 1
-    }
-
-
-
 }
+
 
 /**
  * Средняя
