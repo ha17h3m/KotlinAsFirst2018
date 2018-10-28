@@ -6,6 +6,7 @@ import lesson1.task1.sqr
 import kotlin.math.log
 import kotlin.math.log10
 import kotlin.math.sqrt
+import kotlin.math.pow
 
 /**
  * Пример
@@ -120,11 +121,12 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var count = 2
-    while (n % count > 0 && count % n == 0) {
-        count++
+    for (i in 2..n) {
+
+        if (n % i == 0)
+            return i
     }
-    return count
+    return n
 }
 
 /**
@@ -299,16 +301,17 @@ fun squareSequenceDigit(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun fibSequenceDigit(n: Int): Int {
+    var x = 0
+    var y = 0
+    var a = 0
+    var b = 1
+    while (y < n) {
+        x = a + b
+        y += digitNumber(x)
 
-    var k = 0
-    var num = 1
-    var sqr = 0
-
-    while (k < n) {
-        sqr = num * num
-        k += digitNumber(sqr)
-        num++
+        val sum = a
+        a += b
+        b = sum
     }
-    return sqr / Math.pow(10.0, (k - n).toDouble()).toInt() % 10
-
+    return x / 10.toDouble().pow(y - n).toInt() % 10
 }
