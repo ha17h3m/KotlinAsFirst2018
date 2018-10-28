@@ -9,21 +9,17 @@ package lesson5.task1
  * на основе цен из `costs`. В случае неизвестной цены считать, что товар
  * игнорируется.
  */
-fun shoppingListCost(
-        shoppingList: List<String>,
-        costs: Map<String, Double>): Double {
-    var totalCost = 0.0
-
+fun shoppingListCost(shoppingList: List<String>,
+                     costs: Map<String, Double>): Double {
+    var finalprice = 0.0
     for (item in shoppingList) {
-        val itemCost = costs[item]
-        if (itemCost != null) {
-            totalCost += itemCost
+        val price = costs[item]
+        if (price != null) {
+            finalprice += price
         }
     }
-
-    return totalCost
+    return finalprice
 }
-
 /**
  * Пример
  *
@@ -40,30 +36,28 @@ fun filterByCountryCode(
             namesToRemove.add(name)
         }
     }
-
     for (name in namesToRemove) {
         phoneBook.remove(name)
     }
 }
-
 /**
  * Пример
  *
  * Для заданного текста `text` убрать заданные слова-паразиты `fillerWords`
  * и вернуть отфильтрованный текст
  */
-fun removeFillerWords(
-        text: List<String>,
-        vararg fillerWords: String): List<String> {
+fun removeFillerWords(text: List<String>,
+                      vararg fillerWords: String): List<String> {
+
     val fillerWordSet = setOf(*fillerWords)
 
-    val res = mutableListOf<String>()
+    val result = mutableListOf<String>()
     for (word in text) {
         if (word !in fillerWordSet) {
-            res += word
+            result += word
         }
     }
-    return res
+    return result
 }
 
 /**
@@ -72,9 +66,9 @@ fun removeFillerWords(
  * Для заданного текста `text` построить множество встречающихся в нем слов
  */
 fun buildWordSet(text: List<String>): MutableSet<String> {
-    val res = mutableSetOf<String>()
-    for (word in text) res.add(word)
-    return res
+    val result = mutableSetOf<String>()
+    for (word in text) result.add(word)
+    return result
 }
 
 /**
@@ -94,7 +88,12 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *     mapOf("Emergency" to "911", "Police" to "02")
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
-fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> = TODO()
+fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
+    val x = mapA.toMutableMap()
+    for ((key, entry) in mapB)
+        if ((x[key] != entry) && (x[key] != null)) x[key] = "${x[key]}, $entry" else x[key] = entry
+    return x
+}
 
 /**
  * Простая
@@ -106,7 +105,12 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *   buildGrades(mapOf("Марат" to 3, "Семён" to 5, "Михаил" to 5))
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
-fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
+fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
+    val x = mutableMapOf<Int, MutableList<String>>()
+    for ((s, i) in grades) if (x[i] == null) x[i] = mutableListOf(s) else x[i]!!.add(s)
+    for ((i) in x) x[i]!!.sort()
+    return x
+}
 
 /**
  * Простая
@@ -118,7 +122,10 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "z", "b" to "sweet")) -> true
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
-fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
+fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
+    for ((x, y) in a) if (b[x] != y) return false
+    return true
+}
 
 /**
  * Средняя
@@ -189,7 +196,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   subtractOf(a = mutableMapOf("a" to "z"), mapOf("a" to "z"))
  *     -> a changes to mutableMapOf() aka becomes empty
  */
-fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit = TODO()
+fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Boolean = a.keys.removeIf { b[it] == a[it] }
 
 /**
  * Простая
