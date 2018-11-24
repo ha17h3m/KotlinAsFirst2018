@@ -1,6 +1,8 @@
 @file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence")
-
 package lesson6.task1
+import lesson2.task2.daysInMonth
+import kotlin.KotlinNullPointerException
+
 
 /**
  * Пример
@@ -71,8 +73,30 @@ fun main(args: Array<String>) {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
-
+fun dateStrToDigit(str: String): String {
+    val parts = str.split(" ").filter { it != "" }
+    if (parts.size != 3) return ""
+    val day = parts[0].toIntOrNull()
+    val year = parts[2].toIntOrNull()
+    val month = when (parts[1]) {
+        "января" -> 1
+        "февраля" -> 2
+        "марта" -> 3
+        "апреля" -> 4
+        "мая" -> 5
+        "июня" -> 6
+        "июля" -> 7
+        "августа" -> 8
+        "сентября" -> 9
+        "октября" -> 10
+        "ноября" -> 11
+        "декабря" -> 12
+        else -> 0
+    }
+    return if (year == null || day == null) ""
+    else if (day > daysInMonth(month, year) || day < 0 || month == 0 || year < 0) ""
+    else String.format("%02d.%02d.%d", day, month, year)
+}
 /**
  * Средняя
  *
@@ -83,8 +107,30 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
-
+fun dateDigitToStr(digital: String): String {
+    val x = digital.split(".").filter { it != "" }
+    if (x.size != 3) return ""
+    val day = x[0].toIntOrNull()
+    val year = x[2].toIntOrNull()
+    val month = when (x[1]) {
+        "01" -> "января"
+        "02" -> "февраля"
+        "03" -> "марта"
+        "04" -> "апреля"
+        "05" -> "мая"
+        "06" -> "июня"
+        "07" -> "июля"
+        "08" -> "августа"
+        "09" -> "сентября"
+        "10" -> "октября"
+        "11" -> "ноября"
+        "12" -> "декабря"
+        else -> "0"
+    }
+    return if (day == null || year == null || month == "0") ""
+    else if (day > daysInMonth(x[1].toInt(), year) || day < 0 || year < 0) ""
+    else String.format("%d $month %d", day, year)
+}
 /**
  * Средняя
  *
@@ -97,8 +143,14 @@ fun dateDigitToStr(digital: String): String = TODO()
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
-
+fun flattenPhoneNumber(phone: String): String {
+    val ans = mutableListOf<Char>()
+    for (char in phone) {
+        if (char == '+' || char in '0'..'9') ans.add(char)
+        else if (char != ' ' && char != '(' && char != ')' && char != '-') return ""
+    }
+    return ans.joinToString(separator = "")
+}
 /**
  * Средняя
  *
@@ -109,8 +161,17 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val str = jumps.replace(Regex("""\s%|\s-"""), "")
+    val results = str.split(" ")
 
+    for (result in results) {
+        if (!result.contains(Regex("""[\d]"""))) return -1
+        result.toInt()
+    }
+
+    return results.max()!!.toInt()
+}
 /**
  * Сложная
  *
@@ -122,6 +183,7 @@ fun bestLongJump(jumps: String): Int = TODO()
  * При нарушении формата входной строки вернуть -1.
  */
 fun bestHighJump(jumps: String): Int = TODO()
+
 
 /**
  * Сложная
@@ -143,7 +205,16 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    var s = 0
+    val word = str.split(" ")
+    for (i in 0 until word.size - 1)
+        if (word[i].toLowerCase() == word[i + 1].toLowerCase())
+            return s
+        else s += word[i].length + 1
+    return -1
+}
+
 
 /**
  * Сложная
@@ -169,8 +240,19 @@ fun mostExpensive(description: String): String = TODO()
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
-
+fun fromRoman(roman: String): Int {
+    if (roman == "") return -1
+    val tab = mapOf('I' to 1, 'V' to 5, 'X' to 10, 'L' to 50, 'C' to 100, 'D' to 500, 'M' to 1000)
+    var result = 0
+    for (i in 0 until roman.length - 1) {
+        val number = tab[roman[i]] ?: return -1
+        val nextNumber = tab[roman[i + 1]] ?: return -1
+        if (nextNumber > number) result -= number
+        else result += number
+    }
+    result += tab[roman[roman.length - 1]] ?: return -1
+    return result
+}
 /**
  * Очень сложная
  *
