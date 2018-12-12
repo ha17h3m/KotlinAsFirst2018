@@ -1,5 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson2.task1
+
 import kotlin.math.max
 import kotlin.math.min
 import lesson1.task1.discriminant
@@ -65,17 +67,15 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
 
-fun ageDescription(age: Int): String  {
+fun ageDescription(age: Int): String {
     var x = age
     if (age in 21..110 || age > 120) x = age % 10
     return when (x) {
-        1        -> "$age год"
-        in 2..4  -> "$age года"
-        else     -> "$age лет"
+        1 -> "$age год"
+        in 2..4 -> "$age года"
+        else -> "$age лет"
     }
 }
-
-
 
 
 /**
@@ -136,11 +136,11 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           bishopX: Int, bishopY: Int): Int {
     val rook = (rookX == kingX || rookY == kingY)
     val bishop = abs(kingX - bishopX) == abs(kingY - bishopY)
-return when {
+    return when {
         rook && bishop -> 3
-        rook           -> 1
-        bishop         -> 2
-        else           -> 0
+        rook -> 1
+        bishop -> 2
+        else -> 0
     }
 }
 

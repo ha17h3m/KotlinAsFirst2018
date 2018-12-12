@@ -48,8 +48,10 @@ fun isPerfect(n: Int): Boolean {
         if (n % m > 0) continue
         sum += m
         if (sum > n) break
+
     }
     return sum == n
+
 }
 
 /**
@@ -74,12 +76,17 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  */
 fun digitNumber(n: Int): Int {
 
+
     var number = n
     var length = 0
     do {
-        if (number != 0)
-            number /= 10; length++
+
+        number /= 10
+        length++
+
+
     } while (number > 0)
+
     return length
 }
 
@@ -115,6 +122,7 @@ fun lcm(m: Int, n: Int): Int {
         z += x
     return z
 }
+
 /**
  * Простая
  *
@@ -122,7 +130,6 @@ fun lcm(m: Int, n: Int): Int {
  */
 fun minDivisor(n: Int): Int {
     for (i in 2..n) {
-
         if (n % i == 0)
             return i
     }
@@ -164,9 +171,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int): Boolean {
-    return (sqrt(m * 1.0) <= Math.floor(sqrt(n * 1.0)))
-}
+fun squareBetweenExists(m: Int, n: Int): Boolean = sqrt(m.toDouble()) <= Math.floor(sqrt(n.toDouble()))
 
 
 /**
@@ -275,8 +280,6 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun squareSequenceDigit(n: Int): Int {
-    // 'reached' is the amount of digits
-    // of sequence we've already 'checked'
     var k = 0
     var num = 1
     var sqr = 0
