@@ -1,8 +1,8 @@
 @file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence")
-
 package lesson7.task1
 
 import java.io.File
+import lesson3.task1.digitNumber
 
 /**
  * Пример
@@ -126,9 +126,16 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
-}
-
+    val lines = File(inputName).readLines().map { it.trim() }
+    var max = 0
+    for (line in lines) if (line.length >= max) max = line.length
+    val writer = File(outputName).bufferedWriter()
+    for (i in 0 until lines.size) {
+        for (j in 1..(max-lines[i].length)/2) writer.write(" ")
+        writer.write(lines[i])
+        if (i != lines.size - 1) writer.newLine()
+    }
+    writer.close()}
 /**
  * Сложная
  *
@@ -157,9 +164,40 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
-}
+    val text = File(outputName).bufferedWriter()
+    val maxl = File(inputName).readText().split("\n")
+            .map { it.trim().length }
+            .max() ?: 0
 
+    for (line in File(inputName).readLines()) {
+        val numOfChar = line.trim()
+                .count { it != ' ' }
+        val listOfWords = line.trim()
+                .split(Regex("\\s+"))
+        val numOfSpace = listOfWords.size - 1
+
+        text.write(listOfWords.dropLast(1)
+                .mapIndexed { index, it ->
+                    if (index < (maxl - numOfChar) % numOfSpace)
+                        it.padEnd(
+                                it.length + (maxl - numOfChar) / numOfSpace + 1, ' '
+                        )
+                    else
+                        it.padEnd(
+                                it.length + (maxl - numOfChar) / numOfSpace, ' '
+                        )
+                }
+                .joinToString(separator = "")
+        )
+
+        text.write(listOfWords[numOfSpace])
+
+        text.newLine()
+    }
+
+    text.close()
+
+}
 /**
  * Средняя
  *
@@ -223,9 +261,26 @@ fun top20Words(inputName: String): Map<String, Int> {
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    TODO()
+    val text = File(inputName).readLines()
+    val rightDictionary = mutableMapOf<Char, String>()
+    for ((key, value) in dictionary) {
+        rightDictionary.put(key.toLowerCase(), value.toLowerCase())
+    }
+    File(outputName).bufferedWriter().use {
+        for (string in text) {
+            for (word in string.split("")) {
+                for (char in word) {
+                    if (char == char.toLowerCase()) {
+                        it.write(rightDictionary.getOrDefault(char, char.toString()))
+                    } else {
+                        it.write(rightDictionary.getOrDefault(char.toLowerCase(), char.toString()).capitalize())
+                    }
+                }
+            }
+            it.newLine()
+        }
+    }
 }
-
 /**
  * Средняя
  *
@@ -436,9 +491,41 @@ fun markdownToHtml(inputName: String, outputName: String) {
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
-}
+    val text = File(outputName).bufferedWriter()
+    val lengthOfLines = digitNumber(lhv * rhv)
+    val listOfStr = mutableListOf(lhv.toString() //Создаём список для будущих строк выходного файла
+            .padStart(lengthOfLines + 1, ' ')
+    )
 
+    listOfStr.add( //Добавляем в список первые три строки (множители и дефисы)
+            "*" + rhv.toString().padStart(lengthOfLines, ' ')
+    )
+
+    val def = "".padEnd(lengthOfLines + 1, '-')
+
+    listOfStr.add(def)
+
+    "$rhv".reversed().forEachIndexed { index, digit ->
+        //Добавляем в список строки с порязрядными произведениями
+        val number = "${lhv * "$digit".toInt()}"
+
+        if (index == 0)
+            listOfStr.add(number.padStart(lengthOfLines + 1, ' '))
+        else
+            listOfStr.add("+" + number.padStart(lengthOfLines - index, ' '))
+    }
+
+    listOfStr.add(def) //Добавляем с список дефисы и финальное произведение
+    listOfStr.add("${lhv * rhv}".padStart(lengthOfLines + 1, ' '))
+
+    listOfStr.forEach {
+        //Переписываем строки из списка в файл
+        text.write(it)
+        text.newLine()
+    }
+
+    text.close()
+}
 
 /**
  * Сложная

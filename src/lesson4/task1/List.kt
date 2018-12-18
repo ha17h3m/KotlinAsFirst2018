@@ -129,9 +129,7 @@ fun abs(v: List<Double>): Double {
  */
 fun mean(list: List<Double>): Double {
     return if (list.isEmpty()) 0.0
-    else {
-        list.sum() / list.size
-    }
+    else list.sum() / list.size
 }
 
 
@@ -146,14 +144,12 @@ fun mean(list: List<Double>): Double {
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
     val mean = mean(list)
-    val iterate = list.listIterator()
-    while (iterate.hasNext()) {
-        iterate.set(iterate.next() - mean)
+    for (i in 0 until list.size) {
+        val element = list[i] - mean
+        list[i] = element
     }
-
     return list
 }
-
 /**
  * Средняя
  *
@@ -172,11 +168,15 @@ fun times(a: List<Double>, b: List<Double>): Double =
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0.0 при любом x.
  */
-fun polynom(p: List<Double>, x: Double): Double =
-        p.foldIndexed(0.0) {
-            index, total, element -> total + (element * Math.pow(x, index.toDouble()))
-        }
-
+fun polynom(p: List<Double>, x: Double): Double {
+    var i = 1.0
+    var sum = 0.0
+    for (element in p) {
+        sum += element * i
+        i *= x
+    }
+    return sum
+}
 
 /**
  * Средняя
@@ -205,14 +205,14 @@ fun accumulate(list: MutableList<Double>): MutableList<Double> {
 fun factorize(n: Int): List<Int> {
     var result = listOf<Int>()
     var n1 = n
-    var diviver = 2
-    while (diviver <= n1) {
-        if (n1 % diviver == 0) {
-            result += diviver
-            n1 /= diviver
-        } else diviver++
+    var divisor = 2
+    while (divisor <= n1) {
+        if (n1 % divisor == 0) {
+            result += divisor
+            n1 /= divisor
+        } else divisor++
     }
-    return result.sorted()
+    return result
 }
 
 /**
