@@ -88,10 +88,19 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *     mapOf("Emergency" to "911", "Police" to "02")
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
+
+
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
     val x = mapA.toMutableMap()
-    for ((key, entry) in mapB)
-        if ((x[key] != entry) && (x[key] != null)) x[key] = "${x[key]}, $entry" else x[key] = entry
+    mapB.forEach { key, value ->
+        x.merge(key, value)
+        { y, _ ->
+            return@merge when (y) {
+                value -> y
+                else -> "$y, $value"
+            }
+        }
+    }
     return x
 }
 
@@ -106,12 +115,20 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
-    val x = mutableMapOf<Int, MutableList<String>>()
-    for ((s, i) in grades) if (x[i] == null) x[i] = mutableListOf(s) else x[i]!!.add(s)
-    for ((i) in x) x[i]!!.sort()
-    return x
-}
+    val result = mutableMapOf<Int, List<String>>()
+    val grade = grades.values.toSet()
+    for (i in grade) {
+        val student = mutableListOf<String>()
+        for ((key, value) in grades) {
+            if (value == i) {
+                student.add(key)
+            }
+        }
+        result[i] = student.sortedDescending()
 
+    }
+    return result
+}
 /**
  * Простая
  *
@@ -123,7 +140,10 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
-    for ((x, y) in a) if (b[x] != y) return false
+    for ((x, y) in a) {
+        if (b[x] != y)
+            return false
+    }
     return true
 }
 
@@ -159,13 +179,11 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
-    val current = mutableListOf<Double>()
-    val min = current.min()
-    stuff.map { if (it.value.first == kind) current.add(it.value.second) }
-    stuff.filter { (it.value.first != kind || it.value.second != min) }.map { return it.key }
-    return null
-}
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? = stuff
+        .filter { (_, data) -> data.first == kind }
+        .minBy  { (_, data) -> data.second }
+        ?.component1()
+
 /**
  * Сложная
  *
@@ -190,8 +208,32 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
-
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+    val result = mutableMapOf<String, Set<String>>()
+    val all = mutableSetOf<String>()
+    for ((key, value) in friends) {
+        all += value
+        all += key
+    }
+    for (element in all) {
+        val humans = mutableSetOf<String>()
+        if (friends[element] != null) {
+            humans += friends[element]!!
+        }
+        for (i in 0..friends.size) {
+            for ((key, value) in friends) {
+                if (key in humans && value.isNotEmpty()) {
+                    humans += value
+                }
+            }
+            if (result[element] == humans - element) {
+                break
+            }
+            result.put(element, humans - element)
+        }
+    }
+    return result
+}
 /**
  * Простая
  *
@@ -213,7 +255,15 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Boolean =
  *
  * Для двух списков людей найти людей, встречающихся в обоих списках
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
+    val people = mutableSetOf<String>()
+    for (i in a) {
+        if (i in b) {
+            people.add(i)
+        }
+    }
+    return people.toList()
+}
 
 /**
  * Средняя
